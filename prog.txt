@@ -1,1 +1,41 @@
-atualizar
+import requests
+from datetime import datetime, timedelta
+from github import Github
+
+# Configurações do GitHub
+GITHUB_TOKEN = 'o_teu_token_do_github'
+REPO_NAME = 'teu-utilizador/agenda-desportiva'
+FILE_PATH = 'prog.txt'
+
+# Função para obter os eventos desportivos (exemplo fictício)
+def obter_eventos():
+    # Aqui irias buscar os dados reais dos eventos
+    eventos = [
+        {'data': '2025-04-05', 'hora': '13:30', 'desporto': 'Futebol', 'evento': 'Chelsea vs. Manchester United', 'canal': 'Sport TV 2'},
+        {'data': '2025-04-05', 'hora': '15:00', 'desporto': 'Golfe', 'evento': 'The Masters - 3ª Ronda', 'canal': 'Eurosport 2 FR'},
+        # Adiciona mais eventos conforme necessário
+    ]
+    return eventos
+
+# Função para formatar os eventos em texto
+def formatar_eventos(eventos):
+    texto = ''
+    data_atual = ''
+    for evento in eventos:
+        if evento['data'] != data_atual:
+            data_atual = evento['data']
+            texto += f"\n========================\n📅 {datetime.strptime(data_atual, '%Y-%m-%d').strftime('%A, %d de %B de %Y')}\n========================\n"
+        texto += f"{evento['hora']}  | {evento['desporto']:10} | {evento['evento']:<40} | {evento['canal']}\n"
+    return texto
+
+# Função para atualizar o ficheiro no GitHub
+def atualizar_github(conteudo):
+    g = Github(GITHUB_TOKEN)
+    repo = g.get_repo(REPO_NAME)
+    file = repo.get_contents(FILE_PATH)
+    repo.update_file(FILE_PATH, "Atualização automática do prog.txt", conteudo, file.sha)
+
+# Fluxo principal
+eventos = obter_eventos()
+conteudo = formatar_eventos(eventos)
+atualizar_github(conteudo)
