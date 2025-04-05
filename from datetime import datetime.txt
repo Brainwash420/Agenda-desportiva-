@@ -1,0 +1,24 @@
+from datetime import datetime
+
+# Simulação de eventos
+eventos = [
+    {'data': '2025-04-05', 'hora': '13:30', 'desporto': 'Futebol', 'evento': 'Chelsea vs. Manchester United', 'canal': 'Sport TV 2'},
+    {'data': '2025-04-05', 'hora': '15:00', 'desporto': 'Golfe', 'evento': 'The Masters - 3ª Ronda', 'canal': 'Eurosport 2 FR'},
+    {'data': '2025-04-06', 'hora': '20:00', 'desporto': 'UFC', 'evento': 'UFC 301 Oliveira vs. Tsarukyan', 'canal': 'RMC Sport 2'},
+]
+
+def formatar_eventos(eventos):
+    texto = ''
+    data_atual = ''
+    for evento in eventos:
+        if evento['data'] != data_atual:
+            data_atual = evento['data']
+            data_formatada = datetime.strptime(data_atual, '%Y-%m-%d').strftime('%A, %d de %B de %Y')
+            texto += f"\n========================\n📅 {data_formatada.upper()}\n========================\n"
+        texto += f"{evento['hora']}  | {evento['desporto']:10} | {evento['evento']:<40} | {evento['canal']}\n"
+    return texto
+
+# Gravar ficheiro prog.txt
+conteudo = formatar_eventos(eventos)
+with open("prog.txt", "w", encoding="utf-8") as f:
+    f.write(conteudo)
